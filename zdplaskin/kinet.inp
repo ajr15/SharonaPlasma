@@ -1,0 +1,213 @@
+
+# ArH2O Input Data File, 156 reactions
+# ZDPLASKIN
+#
+
+ELEMENTS
+E H O Ar 
+END
+
+BOLSIG
+Ar H2O Ar* 
+END
+
+SPECIES
+E H2O H2O(J0) H2O(J1) H2O(J2) H2O(J3) H2O(v010) H2O(v100) 
+HO2 H2O2 O3 H(n2) H(n3) H(n4) H H2 O2 OH OH(A) OH^- O^- H^- 
+H2O^+ H^+ OH^+ O^+ H2^+  H3O^+ O2^+ 
+O(21S) O(23P) O(33S) O(35S) O(33P) O(35P) O 
+Ar Ar^+ Ar* Ar2^+ ArH^+ Ar(W)^+ Ar2(W)^+ e(W) H2O(W)^+ OH(W)^+ H(W)^-   
+END
+
+REACTIONS
+#
+# a piece of Fortran code
+#
+$ use options, only : gas_pressure, radius, gap_length
+$ double precision :: diff_rate
+$ diff_rate = 1.52d0 * ( 760.d0 / gas_pressure) * ( Tgas / 273.16d0 ) * ( Te / 11600.d0 ) &
+$                    * ( (2.405d0/radius)**2 + (3.141d0/gap_length)**2 )
+
+
+#Momentum Transfer, 24 reactions
+
+E + H2O => E + H2O                 !   Bolsig+ H2O -> H2O*
+E + H2O => H + OH^-                !   Bolsig+ H2O -> H+OH^-
+E + H2O => H2 + O^-         	   !   Bolsig+ H2O -> H2+O^-
+E + H2O => OH + H^-                !   Bolsig+ H2O -> HO+H^- 
+E + H2O => E + H(n2)+ OH           !   Bolsig+ H2O -> H(a)
+E + H2O => E + H(n3)+ OH           !   Bolsig+ H2O -> H(b)
+E + H2O => E + H(n4)+ OH           !   Bolsig+ H2O -> H(La)
+E + H2O => E + O(33P) + H2         !   Bolsig+ H2O -> O(a')
+E + H2O => E + O(35P) + H2         !   Bolsig+ H2O -> O(b')
+E + H2O => E + O(21S) + H2         !   Bolsig+ H2O -> O(1S)
+E + H2O => E + OH + H              !   Bolsig+ H2O -> OH(X)
+E + H2O => E + OH(A)+ H            !   Bolsig+ H2O -> OH(A)
+E + H2O => E + H2O(J0)             !   Bolsig+ H2O -> H2O(rot)
+E + H2O => E + H2O(J1)             !   Bolsig+ H2O -> H2O(rot1)
+E + H2O => E + H2O(J2)             !   Bolsig+ H2O -> H2O(rot2)
+E + H2O => E + H2O(J3)             !   Bolsig+ H2O -> H2O(rot3)
+E + H2O => E + H2O(v010)           !   Bolsig+ H2O -> H2O(v010)
+E + H2O => E + H2O(v100)           !   Bolsig+ H2O -> H2O(v100)
+E + H2O => E + E + H2O^+           !   Bolsig+ H2O -> H2O^+
+E + H2O => E + E + H^+ + OH        !   Bolsig+ H2O -> H^+
+E + H2O => E + E + OH^+ + H        !   Bolsig+ H2O -> OH^+
+E + H2O => E + E + O^+ + H2        !   Bolsig+ H2O -> O^+
+E + H2O => E + E + H2^+ + O        !   Bolsig+ H2O -> H2^+
+
+# Charge transfer, 17 reactions
+
+H^- + H2O => OH^- + H2		       !   3.8d-15      
+H2O^+ + H2O => H3O^+ + OH          !   1.7d-15
+H2O^+ + H2 => H3O^+ + H            !   1.4d-15
+H2O^+ + O2 => O2^+ + H2O           !   1.5d-16    
+OH^+ + H2O => H2O^+ + OH           !   3.0d-15  
+OH^+ + H => O^+ + H2               !   4.9d-16*exp(0.36d0/Tgas)
+OH^+ + O => O^+ + OH               !   1.6d-16*exp(0.44d0/Tgas)
+H^+ + H2O => H2O^+ + H             !   3.0d-15
+H2^+ + H2O => H2O^+ + H2           !   3.6d-15
+H2^+ + H2O => H3O^+ + H            !   3.4d-15
+O^+ + H2O => H2O^+ + O             !   2.33d-15
+OH^+ + O2 => O2^+ + OH             !   2.0d-16   
+
+
+#Assosiative deatachment, 11 reactions
+
+O^- + O => O2 + E                  !   1.5d-16
+O^- + O(21S) => O2 + E             !   1.5d-16
+O^- + O(23P) => O2 + E             !   1.5d-16
+O^- + O2 => O3 + E                 !   5.0d-21*exp(2.692d0-0.07d0/Tgas)
+O^- + H2 => H2O + E                !   6.0d-16
+H^- + H => H2 + E                  !   1.5d-16
+H^- + O2 => HO2 + E                !   1.2d-15 
+OH^- + H => H2O + E                !   1.0d-15  
+OH^- + O => HO2 + E                !   1.5d-15
+OH^- + O(21S) => HO2 + E           !   1.5d-15
+OH^- + O(23P) => HO2 + E           !   1.5d-15
+
+#Dissociative recombination, 11 reactions
+
+E + H2O^+ => H + OH                !   0.66d-13*(0.01d0/Te)     
+E + H2O^+ => H2 + O                !   0.3d-13*(0.01d0/Te)   
+E + H2O^+ => H + H + O             !   0.24d-13*(0.01d0/Te)
+E + H2^+ => H + H                  !   5.0d-15/SQRT(Te)
+E + OH^+ => O(21S) + H             !   0.6d-14/SQRT(Te) 
+E + H3O^+ => H +H2O                !   1.2d-12*(0.026d0/Te)
+E + O2^+ => O + O                  !   2.0d-14*SQRT(0.026d0/Te)
+
+#Recombination
+E + O^+ => O                       !   2.7d-19*(Te)**(-0.7d0)
+E + E + H2O^+ => H2O + E           !   4.0d-39*(Te)**(-4.5d0)
+E + E + H3O^+ => H + H2O + E       !   4.0d-39*(Te)**(-4.5d0)
+
+#Mutual neutralization, 25 reactions 
+H^- + H^+ => H + H(n2)             !   7.00d-15
+H^- + H^+ => H + H(n3)             !   1.30d-13
+H^- + H2^+ => H + H2               !   0.67d-13
+H^- + O^+ => H + O                 !   3.09d-13
+H^- + OH^+ => H + OH               !   3.09d-13
+H^- + H2O^+ => H + H2O             !   3.08d-13
+O^- + O^+ => O + O                 !   3.00d-13
+O^- + O2^+ => O + O2               !   1.00d-13
+O^- + H^+ => O + H                 !   3.09d-13
+O^- + H2^+ => O + H2               !   2.25d-13
+O^- + OH^+ => O + OH               !   1.05d-13
+O^- + H2O^+ => O + H2O             !   1.03d-13
+OH^- + OH^+ => OH + OH(A)          !   1.09d-13
+OH^- + H^+ => OH + H               !   3.09d-13
+OH^- + H2^+ => OH + H2             !   2.25d-13
+OH^- + O^+ => OH + O               !   1.05d-13  
+OH^- + H2O^+ => OH + H2O           !   1.02d-13 
+H^- + H3O^+ => H2 + H2O            !   3.08d-13
+O^- + H3O^+ => H + O + H2O         !   1.02d-13 
+OH^- + H3O^+ => H2O + H2O          !   1.01d-13 
+H^- + O2^+ => H + O2               !   3.05d-13
+OH^- + O2^+ => OH + O2             !   0.90d-13
+
+#Neutral-neutral reactions, 23 reactions
+
+OH + OH => O + H2O                 !   1.80d-18
+OH + H2 => H2O + H                 !   7.7d-18*exp(-0.1806d0/Tgas)
+OH + O => H + O2                   !   2.3d-17*exp(-0.00946d0/Tgas)
+OH + O => HO2       			   !   2.1d-16
+OH + H => O + H2				   !   1.03d-22
+OH + H2O2 => HO2 + H2O			   !   1.7d-18
+OH + OH => H2O2					   !   1.51d-17
+OH + O3 => HO2 + O2				   !   1.9d-18*exp(-0.086d0/Tgas)
+H + HO2 => OH + OH				   !   8.0d-17		
+H + HO2 => H2O + O				   !   2.0d-18
+OH + HO2 => H2O + O2		       !   4.8d-17*exp(-0.0215d0/Tgas)
+O + HO2 => OH + O2				   !   3.0d-17*exp(-0.0172d0/Tgas)
+HO2 + H => H2 + O2				   !   3.08d-18
+HO2 + HO2 => H2O2 + O2			   !   3.01d-18
+HO2 + O3 => OH + O2 + O2 		   !   1.4d-20*exp(-0.0516d0/Tgas)
+H2O2 + O => HO2 + OH			   !   1.8d-21
+H2O2 + H => H2O + OH			   !   5.09d-20
+H2O2 + H => HO2 + H2			   !   1.22d-22
+O + O3 => O2 + O2				   !   2.0d-17*exp(-0.196/Tgas)
+O + H2 => OH + H				   !   9.1d-24
+H + O2 + H2O => HO2 + H2O		   !   6.4d-43
+H + O2 => HO2					   !   1.8d-18
+H + O3 => OH + O2				   !   1.4d-16*exp(-0.04128d0/Tgas)
+
+#Quenching, 8 reactions
+O(21S) + H2O => O + H2O		       !   3.6d-17
+O(21S) + H2O => OH + OH		       !   2.5d-16
+O(23P) + H2O => OH + OH		       !   2.5d-16
+
+#Emission, 16 reactions
+
+O(21S) => O  			           !   0.7d0
+O(33P) => O(33S)          	       !   0.322d8
+O(35P) => O(35S)			       !   0.369d8
+O(33S) => O(23P)			       !   1.879d8
+O(35S) => O(23P)			       !   1.8d-4
+OH(A) => OH					       !   800d-9
+H(n2) => H					       !   1.6d-9
+H(n3) => H(n2)				       !   10.2d-9
+H(n4) => H(n2)					   !   33.7d-9
+H2O(J0) => H2O                     !   1.25d6     
+H2O(J1) => H2O                     !   1.25d6
+H2O(J2) => H2O                     !   1.25d6
+H2O(J3) => H2O                     !   1.25d6
+H2O(v010) => H2O                   !   1.25d6
+H2O(v100) => H2O                   !   1.25d6
+
+#Ar-Water species reactions, 10 reactions
+
+Ar^+ + H => Ar + H^+               !   1.0d-10
+Ar^+ + H^- => Ar + H               !   2.0d-7
+Ar^+ + H2 => ArH^+ + H             !   1.1d-9
+Ar^+ + OH^- => Ar + OH             !   2.0d-7
+Ar^+ + OH^- => Ar + O + H          !   1.0d-7
+Ar^+ + H2O => Ar + H2O^+           !   7.0d-10
+Ar^+ + H2O => ArH^+ + OH           !   3.0d-10
+H2O^+ + Ar => Ar^+ + H2O           !   2.2d-10
+H3O^+ + Ar => ArH^+ + H2O          !   1.0d-11
+ArH^+ + O^- => Ar + O + H          !   1.0d-7
+
+#Argon reactions, 8 reactions
+
+E + Ar => Ar+ E                   !   Bolsig+ Ar -> Ar
+E + Ar => E + E + Ar^+            !   Bolsig+ Ar -> Ar^+
+E + Ar => Ar* + E                 !   Bolsig+ Ar -> Ar*
+E + Ar* => Ar + E                 !   Bolsig+ Ar* -> Ar
+E + Ar* => Ar^+ + E + E           !   Bolsig+ Ar* -> Ar^+
+Ar2^+ + Ar => Ar^+ + Ar + Ar      !   6.06d-6/301.0d0*exp(-15130.0d0/301.0d0)
+Ar* + Ar* => Ar2^+ + E            !   6.0d-10
+Ar* + Ar + Ar  => Ar + Ar + Ar    !   1.4d-32
+
+
+# ambipolar diffusion losses; here we neglect by surface de-absorption processes
+
+Ar^+ => Ar(W)^+                  !   diff_rate
+Ar2^+ => Ar2(W)^+                !   diff_rate
+H2O^+ => H2O(W)^+                !   diff_rate
+OH^+ => OH(W)^+                  !   diff_rate
+H^- => H(W)^-                    !   diff_rate
+e => e(W)                        !   diff_rate
+
+END
+
+
+

@@ -1,0 +1,1 @@
+{"total_simulation_time": 1e-06, "simulation_timestep": 1e-09, "position": 5, "output_directory": ".", "initial_electron_density": 1000000000.0, "rf_power": 100, "rf_impedance": 50, "rf_frequency": 11000000.0, "gas_pressure": 0.2, "gap_length": 10, "radius": 13, "gas_temperature": 300, "water_fraction": 0.05}
