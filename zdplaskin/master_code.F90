@@ -87,8 +87,8 @@ program main
 
 	! open the results (temp) file and write headers
 	open(1,file=filename)
-	write(1, "(*(G0, :, ','))") 'time ', 'position ', 'electric_field ', 'reduced electric_field ', 'omega_pe ', &
-		'electric_potential ','gas_temperature ', (trim(species_name(j)), j=1,species_max)
+	write(1, "(*(G0, :, ','))") 'time', 'electric_field', 'reduced_electric_field', 'omega_pe', &
+		'electric_potential','gas_temperature', (trim(species_name(j)), j=1,species_max)
 
 	! initializing values for t = 0
 	t = 0.0
@@ -136,7 +136,7 @@ program main
 											Vab, &
 											electric_field, &
 											electric_potential)  ! sets the electric field from the equations
-		write(1, "(*(G0, :, ','))") t, x, electric_field, reduced_electric_field, omega_pe, &
+		write(1, "(*(G0, :, ','))") t, electric_field, reduced_electric_field, omega_pe, &
 						electric_potential, gas_temperature, (density(j), j = 1, species_max)
 			
 		! send reduced electric field data to ZDPlasKin
@@ -159,7 +159,7 @@ program main
 		!writing file and screen
 	end do
 	! writing results for the last time
-	write(1, "(*(G0, :, ','))") t, x, electric_field, reduced_electric_field, omega_pe, &
+	write(1, "(*(G0, :, ','))") t, electric_field, reduced_electric_field, omega_pe, &
 	electric_potential, gas_temperature, (density(j), j = 1, species_max)
 
 	! closing results file

@@ -17,24 +17,25 @@ def dict_cartesian_prod(args_dict):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parser for command line interface to the simulator")
-    parser.add_argument("parent_res_dir", type=str, help="Parent results directory, contains all raw simulation data")
-    parent_res_dir = parser.parse_args("parent_res_dir").parent_res_dir
-    # making results directory 
-    if not os.path.isdir(parent_res_dir):
-        os.makedirs(parent_res_dir)
     # initializing parameters with default values
     parameters = Simulator(1e-8, 1e-6, 5, os.path.join(parent_dir)).parameters_dict()
     # reading desired parameters from command line arguments
+    parser = argparse.ArgumentParser(description="Parser for command line interface to the simulator")
+    parser.add_argument("parent_res_dir", type=str, help="Parent results directory, contains all raw simulation data")
     for parameter, value in parameters.items():
         if not parameter == "output_directory":
             parser.add_argument("--{}_value".format(parameter), default=value, type=float, help="provide single value for {}".format(parameter))
-            parser.add_argument("--{}_range".format(parameter), type=float, nargs=3, help="provide range (min, max, nsteps) for {}".format(parameter))
-            args = parser.parse_args("{}_value".format(parameter), "{}_range".format(parameter))
-            if not len(getattr(args, "{}_range".format(parameter))) == 0:
-                parameters[parameter] = np.linspace(*getattr(args, "{}_range".format(parameter)))
-            else:
-                parameters[parameter] = getattr(args, "{}_value".format(parameter))
+            parser.add_argument("--{}_range".format(parameter), type=float, default=None, nargs=3, help="provide range (min, max, nsteps) for {}".format(parameter))
+    args = parser.parse_args()
+    # making results directory
+    parent_res_dir = args.parent_res_dir
+    if not os.path.isdir(parent_res_dir):
+        os.makedirs(parent_res_dir)
+    # reading compuation parameters
+    if not getattr(args, "{}_range".format(parameter)) is None:
+        parameters[parameter] = np.linspace(*getattr(args, "{}_range".format(parameter)))
+    else:
+        parameters[parameter] = getattr(args, "{}_value".format(parameter))
     # making arguments file for slurm array
     args_dicts = dict_cartesian_prod(parameters)
     args_str = ""
