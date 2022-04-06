@@ -1,0 +1,31 @@
+# List of loaded electron processes to BOLSIG+ solver.
+# Can be used as references for reaction rates in input kinetics.
+AR->AR
+AR->AR*
+AR->AR^+
+H2O->H+OH^-
+H2O->H2+O^-
+H2O->HO+H^-
+H2O->H2O*
+H2O->H(A)
+H2O->H(B)
+H2O->H(LA)
+H2O->O(A')
+H2O->O(B')
+H2O->O(1S)
+H2O->OH(X)
+H2O->OH(A)
+H2O->H2O(ROT)
+H2O->H2O(ROT1)
+H2O->H2O(ROT2)
+H2O->H2O(ROT3)
+H2O->H2O(V010)
+H2O->H2O(V100)
+H2O->H2O^+
+H2O->H^+
+H2O->OH^+
+H2O->O^+
+H2O->H2^+
+H2O->O^+^+
+AR*->AR
+AR*->AR^+

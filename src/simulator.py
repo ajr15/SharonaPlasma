@@ -39,8 +39,7 @@ class Simulator:
         run_str = self.make_run_command()
         os.system(run_str)
         # saving json with run parameters
-        with open(os.path.join(self.output_directory, "params.json"), "w") as f:
-            json.dump(self.parameters_dict(), f)
+        self.write_parameters_to_json(os.path.join(self.output_directory, "params.json"))
         print("COMPUTATION DONE")
 
     def parameters_dict(self):
@@ -50,3 +49,8 @@ class Simulator:
             if not callable(attr) and not arg.startswith("_"):
                 res[arg] = attr
         return res
+        
+    def write_parameters_to_json(self, json_path):
+        with open(json_path, "w") as f:
+            json.dump(self.parameters_dict(), f)
+        

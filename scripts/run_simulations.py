@@ -10,7 +10,7 @@ from src.simulator import Simulator
 def dict_cartesian_prod(args_dict):
     """method to take d={'a: [1, 2], 'b': [3, 4]} and return [{'a': 1, 'b': 3}, {'a': 1, 'b': 4}..."""
     res = []
-    for v_tuple in product(*args_dict.values()):
+    for v_tuple in product(*[c if type(c) is list else [c] for c in args_dict.values()]):
         d = {k: v for k, v in zip(args_dict.keys(), v_tuple)}
         res.append(d)
     return res
@@ -32,10 +32,14 @@ if __name__ == "__main__":
     if not os.path.isdir(parent_res_dir):
         os.makedirs(parent_res_dir)
     # reading compuation parameters
-    if not getattr(args, "{}_range".format(parameter)) is None:
-        parameters[parameter] = np.linspace(*getattr(args, "{}_range".format(parameter)))
-    else:
-        parameters[parameter] = getattr(args, "{}_value".format(parameter))
+    for parameter, value in parameters.items():
+        if not parameter == "output_directory":
+            if not getattr(args, "{}_range".format(parameter)) is None:
+                min_v, max_v = getattr(args, "{}_range".format(parameter))[:2]
+                nsteps = int(getattr(args, "{}_range".format(parameter))[-1])
+                parameters[parameter] = list(np.linspace(min_v, max_v, nsteps))
+            else:
+                parameters[parameter] = getattr(args, "{}_value".format(parameter))
     # making arguments file for slurm array
     args_dicts = dict_cartesian_prod(parameters)
     args_str = ""
@@ -45,10 +49,11 @@ if __name__ == "__main__":
         if not os.path.isdir(calc_out_dir):
             os.mkdir(calc_out_dir)
         # adding output_directory to parameter list
-        parameters["output_directory"] = calc_out_dir
+        d["output_directory"] = calc_out_dir
         # making Simulator object with parameters
-        simulator = Simulator(**parameters)
+        simulator = Simulator(**d)
         args_str += simulator.make_run_command() + "\n"
+        simulator.write_parameters_to_json(os.path.join(calc_out_dir, "params.json"))
     # writing arguments to arguments.txt file in the slurm directory
     with open(os.path.join(parent_res_dir, "arguments.txt"), "w") as f:
         f.write(args_str)
@@ -57,11 +62,11 @@ if __name__ == "__main__":
     with open(os.path.join(parent_dir, "scripts", "sbatch_template.src"), "r") as f:
         text = f.read()
     # filling template with run details
-    text.replace("{njobs}", len(args_dicts))
-    text.replace("{outfile}", os.path.join(parent_res_dir, "%a", "stdout.txt"))
-    text.replace("{args_file}", os.path.join(parent_res_dir, "arguments.txt"))
+    text = text.replace("{njobs}", str(len(args_dicts)))
+    text = text.replace("{outfile}", os.path.join(parent_res_dir, "%a", "stdout.txt"))
+    text = text.replace("{args_file}", os.path.join(parent_res_dir, "arguments.txt"))
     # writing the desired run file
     with open(os.path.join(parent_res_dir, "submit.src"), "w") as f:
         f.write(text)
     # submitting script with sbatch 
-    os.system("sbatch {}".format(os.path.join(parent_res_dir, "submit.src")))
+    #os.system("sbatch {}".format(os.path.join(parent_res_dir, "submit.src")))
