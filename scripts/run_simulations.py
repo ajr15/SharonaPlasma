@@ -18,7 +18,7 @@ def dict_cartesian_prod(args_dict):
 
 if __name__ == "__main__":
     # initializing parameters with default values
-    parameters = Simulator(1e-8, 1e-6, 5, os.path.join(parent_dir)).parameters_dict()
+    parameters = Simulator(1e-6, 1e-8, 5, os.path.join(parent_dir)).parameters_dict()
     # reading desired parameters from command line arguments
     parser = argparse.ArgumentParser(description="Parser for command line interface to the simulator")
     parser.add_argument("parent_res_dir", type=str, help="Parent results directory, contains all raw simulation data")
@@ -69,4 +69,4 @@ if __name__ == "__main__":
     with open(os.path.join(parent_res_dir, "submit.src"), "w") as f:
         f.write(text)
     # submitting script with sbatch 
-    #os.system("sbatch {}".format(os.path.join(parent_res_dir, "submit.src")))
+    os.system("sbatch {}".format(os.path.join(parent_res_dir, "submit.src")))
