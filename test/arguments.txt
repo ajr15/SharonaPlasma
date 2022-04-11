@@ -1,0 +1,1 @@
+/home/shaharpit/Personal/SharonaPlasma/zdplaskin/zdplaskin.exe 1e-06 1e-08         5 1000000000.0 100 50 13650000.0 0.2         10 13 300 0.05 ../test/0/zd_out.csv

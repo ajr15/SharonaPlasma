@@ -66,7 +66,8 @@ program main
 	max_sheath_thickness = 2 * mean_sheath_thickness
 	electric_field_distribution = initial_electron_density * electron_charge / permittivity_const
 	Vp = 2 * electric_field_distribution * mean_sheath_thickness**2
-	plasma_dielectric_const = (electron_charge**2 *(initial_electron_density)/(permittivity_const * electron_mass) * 1.0d4)**0.50d0
+  omega_pe = (electron_charge**2 *(initial_electron_density)/(permittivity_const * electron_mass) * 1.0d4)**0.50d0
+	plasma_dielectric_const = permittivity_const * (1 - (omega_pe / rf_radial_frequency)**2)
 	
 	! ZDPlasKin initialization
 	call ZDPlasKin_init()

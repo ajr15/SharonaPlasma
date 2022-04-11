@@ -1,0 +1,10 @@
+#!/bin/bash
+#SBATCH -n 1
+#SBATCH --array=1-1
+#SBATCH -J ZDPlasKin
+#SBATCH -o ../test/%a/stdout.txt
+#SBATCH -o ../test/%a/stdout.txt
+
+command_line=$(sed -n "$SLURM_ARRAY_TASK_ID"p ../test/arguments.txt)
+
+$command_line
