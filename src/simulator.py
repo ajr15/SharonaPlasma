@@ -13,7 +13,7 @@ class Simulator:
     ARGS:
         ..."""
     total_simulation_time: float=1e-7
-    simulation_timestep: float=1e-9
+    simulation_timestep: float=7.37e-10
     position: float=5
     output_directory: str="."
     initial_electron_density: float=1e9

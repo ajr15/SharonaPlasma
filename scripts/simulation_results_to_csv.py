@@ -11,7 +11,11 @@ from src.simulator import Simulator
 
 
 def res_to_df(res_dir: str):
-    df = dd.read_csv(os.path.join(res_dir, "zd_out.csv"))
+    if os.path.isfile(os.path.join(res_dir, "zd_out.csv")):
+        df = dd.read_csv(os.path.join(res_dir, "zd_out.csv"))
+    else:
+        print("WARNING: no results file found at {}. skipping this directory".format(os.path.join(res_dir, "zd_out.csv")))
+        return pd.DataFrame()
     with open(os.path.join(res_dir, "params.json"), "r") as f:
         params = json.load(f)    
     for k, v in params.items():
